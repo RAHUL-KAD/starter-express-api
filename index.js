@@ -21,7 +21,7 @@ app.post('/email-verification', async (req, res) => {
     console.log(email);
 
       // Validate the email address
-    const { valid, reason, validators } = await validator.validate({ email: email, validateSMTP: false});
+    const { valid, reason, validators } = await validator.validate({ email: email, validateSMTP: true});
 
     if (!valid) {
         return res.status(400).json({ message: 'Invalid email address.', reason: reason, validators: validators });
