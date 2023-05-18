@@ -15,12 +15,12 @@ app.get('/', (req, res) => {
 
 
 app.post('/email-verification', (req, res) => {
-    const { text } = req.body;
+    const { email } = req.body;
 
-    console.log(text);
+    console.log(email);
 
     return res.status(200).json({
-        message: "Email recevied for verification", text: text
+        message: "Email recevied for verification", email: email
     });
 });
 
