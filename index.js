@@ -21,14 +21,14 @@ app.post('/email-verification', async (req, res) => {
     console.log(email);
 
       // Validate the email address
-    const { valid, reason } = await validator.validate(email);
+    const { valid, reason, validators } = await validator.validate(email, {});
 
     if (!valid) {
-        return res.status(400).json({ message: 'Invalid email address.', reason: reason });
+        return res.status(400).json({ message: 'Invalid email address.', reason: reason, validators: validators });
     }
     
       // Return the verified email response
-    return res.status(200).json({ message: 'Email address verified successfully.', email: email, valid: valid });
+    return res.status(200).json({ message: 'Email address verified successfully.', email: email, valid: valid, validators: validators });
 });
 
 app.listen(process.env.PORT || 3000)
