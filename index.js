@@ -11,6 +11,10 @@ const SUPABASE_USERS_TABLE = 'clerk-users';
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+// https://chat.openai.com/share/cb17d8b3-4b72-418f-b7a1-1f12a1898e43
+
+// https://chat.openai.com/share/832e1170-e46a-4148-8556-b6787a3289c5
+
 app.get('/', (req, res) => {
   res.send('Hello from tinypixel!');
 });
