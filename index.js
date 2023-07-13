@@ -6,7 +6,7 @@ const base64 = require('base64-js');
 const { DateTime } = require('luxon');
 
 const SUPABASE_URL = 'https://xwskviprdexmphfivdtm.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3c2t2aXByZGV4bXBoZml2ZHRtIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY4OTA4MDc4MywiZXhwIjoyMDA0NjU2NzgzfQ.puKLmTzoljfHYrBaObMalO4R1I13eeDfPggXuxuij6M'; // Add your Supabase service_role API key
+const SUPABASE_KEY = process.env.SUPABASE_KEY; // Add your Supabase service_role API key
 const SUPABASE_TABLE = 'pixel-tracker';
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
