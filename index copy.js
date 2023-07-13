@@ -4,8 +4,6 @@ const geoip = require('geoip-lite');
 const { createClient } = require('@supabase/supabase-js');
 const base64 = require('base64-js');
 const { DateTime } = require('luxon');
-const cookieParser = require('cookie-parser');
-
 const SUPABASE_URL = 'https://xwskviprdexmphfivdtm.supabase.co';
 const SUPABASE_KEY = process.env.SUPABASE_KEY;
 const SUPABASE_TABLE = 'pixel-tracker';
@@ -14,6 +12,8 @@ const SUPABASE_USERS_TABLE = 'clerk-users';
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // https://chat.openai.com/share/cb17d8b3-4b72-418f-b7a1-1f12a1898e43
+
+// https://chat.openai.com/share/832e1170-e46a-4148-8556-b6787a3289c5
 
 app.get('/', (req, res) => {
   res.send('Hello from tinypixel!');
@@ -53,16 +53,6 @@ function extractUniqueUserId(user_id) {
     });
 }
 
-// Add cookie-parser middleware
-app.use(cookieParser());
-
-app.get('/tracker', async (req, res) => {
-  // Generate and send the tracking pixel as the response
-  const pixel_data = base64.toByteArray('R0lGODlhAQABAIAAAP8AAP8AACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==');
-  res.set('Content-Type', 'image/gif');
-  res.send(Buffer.from(pixel_data));
-});
-
 app.get('/pixel.gif', async (req, res) => {
   const origin_page = req.query.page || 'main';
   const client_ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress || '';
@@ -76,11 +66,6 @@ app.get('/pixel.gif', async (req, res) => {
     console.log(`${key}: ${value}`);
   }
 
-  // Read the visit count from the cookie or initialize it to 0
-  let visitCount = parseInt(req.cookies.visitCount) || 0;
-
-  console.log("no of times user visited: ", visitCount);
-
   if ('user-id' in req.query) {
     user_id = req.query['user-id'];
 
@@ -93,9 +78,6 @@ app.get('/pixel.gif', async (req, res) => {
     } else {
       user_id = "User id doesn't exist";
     }
-
-      // If user ID exists, increment the visit count
-      visitCount++;
   }
 
   const pixel_data = base64.toByteArray('R0lGODlhAQABAIAAAP8AAP8AACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==');
@@ -120,28 +102,12 @@ app.get('/pixel.gif', async (req, res) => {
     unique_user_id: user_id
   };
 
-  // Update the visit count within the cookie on the client-side
-  const cookieScript = `
-    document.cookie = 'visitCount=${visitCount}; path=/;';
-  `;
-
-  // Add the JavaScript code to the response body
-  const responseContent = `
-    <script>
-      ${cookieScript}
-      var img = new Image();
-      img.src = "/tracker";  // Send a separate request for the tracking pixel
-    </script>
-  `;
-
   supabase
     .from(SUPABASE_TABLE)
     .insert([tracking_data])
     .then(() => {
-        // Send the response with the client-side JavaScript
-        res.set('Content-Type', 'text/html');
-        res.send(responseContent);
-
+      res.set('Content-Type', 'image/gif');
+      res.send(Buffer.from(pixel_data));
     })
     .catch((error) => {
       console.error(error);
