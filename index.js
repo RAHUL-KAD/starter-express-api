@@ -117,7 +117,8 @@ app.get('/pixel.gif', async (req, res) => {
     referrer,
     geo: geo_data,
     device_type,
-    unique_user_id: user_id
+    unique_user_id: user_id,
+    user_visit_counts: visitCount,
   };
 
   // Update the visit count within the cookie on the client-side
